@@ -1,5 +1,5 @@
 # aids-sortowania
-Mega fajne repozytorium do sortowania AIDS
+Mega fajne repozytorium do sortowania - Projekt nr 1 na AIDS
 
 1. generator.py - moduł generowania losowych testów i zapisywania wyników do logs.csv, 
 2. user_interface.py - moduł tworzenia interfejsu użytkownika dla wybranej funkcji sortowania,
