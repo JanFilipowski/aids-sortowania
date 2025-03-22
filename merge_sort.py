@@ -1,7 +1,8 @@
 from user_interface import make_interface
-
+merge_count = 0
 
 def merge_sort(arr):
+    global merge_count
     if len(arr) > 1:
         mid = len(arr) // 2
 
@@ -30,6 +31,10 @@ def merge_sort(arr):
             arr[k] = right_half[j]
             j += 1
             k += 1
+
+        merge_count += 1
+
+    return merge_count
 
 if __name__ == "__main__":
     print("====== MERGE SORT ======")

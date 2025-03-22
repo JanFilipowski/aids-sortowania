@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
+from matplotlib import colormaps  # Zamiast matplotlib.cm.get_cmap
 import os
 
 # Wczytanie danych
@@ -19,24 +19,31 @@ for algorithm in df["sorting_algorithm"].unique():
     # Lista unikalnych typów sekwencji
     sequence_types = algorithm_data["sequence_type"].unique()
 
-    # Generuj kolory dla każdego typu sekwencji
-    colors = cm.get_cmap("tab10", len(sequence_types))
+    # Przygotuj mapę kolorów
+    cmap = colormaps.get_cmap("tab10")
 
     for i, seq_type in enumerate(sequence_types):
         # Filtruj dane dla danego typu sekwencji
         data = algorithm_data[algorithm_data["sequence_type"] == seq_type]
         data = data.sort_values("size")
 
-        # Rysuj wykres z łaczonymi punktami
-        plt.plot(data["size"], data["avg_time"],
-                 marker="o",
-                 linestyle="-",
-                 color=colors(i),
-                 label=seq_type)
+        # Rysuj wykres z łączonymi punktami i słupkami błędu
+        plt.errorbar(
+            data["size"],
+            data["avg_time"],
+            yerr=data["standard_deviation"],  # Dodanie słupków błędu
+            marker="o",
+            linestyle="-",
+            color=cmap(i),
+            label=seq_type,
+            capsize=3  # Długość „czapeczki” słupka błędu
+        )
 
-    plt.title(f"Wydajność algorytmu {algorithm.replace("_"," ")} według rodzaju ciągu")
+    # Ustawienia wykresu
+    plt.title(f"Wydajność algorytmu {algorithm.replace('_',' ')} według rodzaju ciągu")
     plt.xlabel("Liczba Elementów")
     plt.ylabel("Średni czas [s]")
+    # plt.yscale("log", base=10)  # Ustawienie skali logarytmicznej (log base 10)
     plt.grid(True, alpha=0.3)
     plt.legend()
     plt.tight_layout()
@@ -53,24 +60,31 @@ for seq_type in df["sequence_type"].unique():
     # Lista unikalnych algorytmów
     algorithms = seq_data["sorting_algorithm"].unique()
 
-    # Generuj kolory dla każdego algorytmu
-    colors = cm.get_cmap("tab10", len(algorithms))
+    # Przygotuj mapę kolorów
+    cmap = colormaps.get_cmap("tab10")
 
     for i, algorithm in enumerate(algorithms):
         # Filtruj dane dla danego algorytmu
         data = seq_data[seq_data["sorting_algorithm"] == algorithm]
         data = data.sort_values("size")
 
-        # Rysuj wykres z łaczonymi punktami
-        plt.plot(data["size"], data["avg_time"],
-                 marker="o",
-                 linestyle="-",
-                 color=colors(i),
-                 label=algorithm)
+        # Rysuj wykres z łączonymi punktami i słupkami błędu
+        plt.errorbar(
+            data["size"],
+            data["avg_time"],
+            yerr=data["standard_deviation"],
+            marker="o",
+            linestyle="-",
+            color=cmap(i),
+            label=algorithm,
+            capsize=3
+        )
 
+    # Ustawienia wykresu
     plt.title(f"Porównanie wydajności algorytmów sortujących dla ciągów typu {seq_type}")
     plt.xlabel("Liczba Elementów")
     plt.ylabel("Średni czas [s]")
+    plt.yscale("log", base=10)  # Ustawienie skali logarytmicznej (log base 10)
     plt.grid(True, alpha=0.3)
     plt.legend()
     plt.tight_layout()

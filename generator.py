@@ -25,16 +25,20 @@ def generate_sequence(n, sequence_type):
 def test_algorithm_avg_time(sorting_algorithm, num_trials, sizes, sequence_type, log=False):
     print(f"Typ ciągu: {sequence_type}")
     for size in sizes:
-        total_time = 0
+        trial_times = []
         for _ in range(num_trials):
             arr = generate_sequence(size, sequence_type)
             start_time = time.time()
             sorting_algorithm(arr.copy())
             end_time = time.time()
-            total_time += end_time - start_time
-        avg_time = total_time / num_trials
-        print(f"  n = {size}, Średni czas = {avg_time:.6f} s")
-
+            trial_times.append(end_time - start_time)
+        
+        avg_time = sum(trial_times) / num_trials
+        variance = sum((t - avg_time) ** 2 for t in trial_times) / num_trials
+        std_dev = variance ** 0.5
+        
+        print(f"  n = {size}, Średni czas = {avg_time:.6f} s, Odchylenie standardowe = {std_dev:.6f}")
+        
         if log:
             import csv
             from datetime import datetime
@@ -44,7 +48,8 @@ def test_algorithm_avg_time(sorting_algorithm, num_trials, sizes, sequence_type,
                 "sequence_type": sequence_type,
                 "size": size,
                 "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "avg_time": avg_time
+                "avg_time": avg_time,
+                "standard_deviation": std_dev
             }
             with open("logs.csv", mode="a", newline="") as file:
                 writer = csv.DictWriter(file, fieldnames=log_entry.keys())

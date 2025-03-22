@@ -24,8 +24,10 @@ def make_interface(sort_function):
                 if len(sequence) > 10:
                     raise ValueError
 
-                sort_function(sequence)
+                returned = sort_function(sequence)
                 print("Posortowany ciąg:", sequence)
+                if returned:
+                    print("Liczba scaleń: ", returned)
                 break
         except ValueError:
             print("Błąd danych. Spróbuj ponownie.\n")

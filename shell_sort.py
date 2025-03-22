@@ -12,6 +12,8 @@ def shell_sort(arr):
         gaps.append(h)
         k += 1
 
+    print(f"Wygenerowane przyrosty: {list(reversed(gaps))}")
+
     for gap in reversed(gaps):
         for i in range(gap, n):
             temp = arr[i]
